@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: toyapp
+  labels:
+    app: toyapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: toyapp
+  template:
+    metadata:
+      labels:
+        app: toyapp
+    spec:
+      containers:
+      - name: toyapp
+        image: k3d-toy-app-registry:5000/toyapp:v1.0
+        ports:
+        - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: toyapp
+  labels:
+    run: toyapp
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+    name: webapp
+    protocol: TCP
+  selector:
+    app: toyapp
+
